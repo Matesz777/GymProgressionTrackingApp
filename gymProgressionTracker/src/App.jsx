@@ -14,29 +14,39 @@ function App() {
       alert("Wypełnij wszystkie pola!");
       return;
     }
-    const newExercise = {
-      id: Date.now(),
-      name: exercise,
-      sets: sets,
-      reps: reps
-    };
-    setListOfExercises([...listOfExercises, newExercise]);
+    const exerciseId = Date.now();
+    const newSet = [];
+    for (let i = 1; i <= Number(sets); i++){
+      newSet.push({
+        id: `${exerciseId}-${i}`,
+        gruopId: exerciseId, //ID które łączy serie w jedno ćwiczenie
+        name: exercise,
+        setNumber: i,
+        reps: Number(reps)
+      })
+    }
+    setListOfExercises([...listOfExercises, ...newSet]);
     setExercise("");
     setSets("");
     setReps("");
     console.log("Wysłano formularz");
-    console.log("Dodane ćwiczenie: ", newExercise.name);
-    console.log("Dodane serie: ", newExercise.sets);
-    console.log("Dodane powtórzenia: ", newExercise.reps);
-    console.log("Dodane ćwiczenie: ", newExercise);
+    console.log("Dodane ćwiczenie: ", newSet[0].name);
+    console.log("Dodane serie: ", newSet.length - 1);
+    console.log("Dodane powtórzenia: ", newSet[0].reps);
+    console.log("Dodane ćwiczenie: ", newSet);
     console.log("Utworzona lista: ", listOfExercises);
   }
-  const handleCalculateReps = () => {
-    const totalReps = listOfExercises.reduce((total, exercise) => {
-      return total + (exercise.sets * exercise.reps);
+  const totalSumOfReps = () =>{
+    const totalRps = listOfExercises.reduce((sum, ex) => {
+      return sum + ex.reps;
     }, 0);
-    setCalculatedReps(totalReps);
+    setCalculatedReps(totalRps);
   }
+  const updateReps = (id, newReps) => {
+  setListOfExercises(listOfExercises.map(set => 
+    set.id === id ? { ...set, reps: Number(newReps) } : set
+  ));
+};
   return (
     <>
       <form onSubmit={addExercise}>
@@ -45,18 +55,17 @@ function App() {
         <input type="number" placeholder='ilość powtórzeń' value={reps} onChange={(e) => setReps(e.target.value)}/>
         <button type="submit">Dodaj</button>
       </form>
-      <div className="exerciseTable">
-        <ul>
-          {listOfExercises.map((exercise) => (
-            <li key={exercise.id}>
-              <span>{exercise.name} </span>
-              <span>{exercise.sets}/</span><span>{exercise.reps}</span>
-              <span>Ogólną ilość powtórzeń: </span><button onClick={handleCalculateReps}>Przelicz</button>
-              <span>{calculatedReps}</span>
-
-            </li>
-          ))}
-        </ul>
+      <div className="exerciseTable"> 
+        {listOfExercises.map((ex) => (
+          <div key={ex.id} className="exercisecard">
+            {ex.setNumber === 1 && <h3>{ex.name}</h3>}
+            <ul>
+              <li>Seria: {ex.setNumber}</li>
+              <li>Powtórzenia: <input type="number" value={ex.reps} onChange={(e) => updateReps(ex.id, e.target.value)}/></li>
+            </ul>
+          </div>
+        ))}
+       <span>Suma wszystkich powtórzeń: {calculatedReps} <button onClick={totalSumOfReps}>Przelicz</button></span>
       </div>
     </>
   )
