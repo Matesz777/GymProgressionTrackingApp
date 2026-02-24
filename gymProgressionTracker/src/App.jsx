@@ -7,6 +7,7 @@ function App() {
   const [sets, setSets] = useState("");
   const [reps, setReps] = useState(""); 
   const [calculatedReps, setCalculatedReps] = useState(0);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const addExercise = (e) => {
     e.preventDefault();
@@ -19,7 +20,7 @@ function App() {
     for (let i = 1; i <= Number(sets); i++){
       newSet.push({
         id: `${exerciseId}-${i}`,
-        gruopId: exerciseId, //ID które łączy serie w jedno ćwiczenie
+        groupId: exerciseId,
         name: exercise,
         setNumber: i,
         reps: Number(reps)
@@ -29,32 +30,33 @@ function App() {
     setExercise("");
     setSets("");
     setReps("");
-    console.log("Wysłano formularz");
-    console.log("Dodane ćwiczenie: ", newSet[0].name);
-    console.log("Dodane serie: ", newSet.length - 1);
-    console.log("Dodane powtórzenia: ", newSet[0].reps);
-    console.log("Dodane ćwiczenie: ", newSet);
-    console.log("Utworzona lista: ", listOfExercises);
   }
-  const totalSumOfReps = () =>{
-    const totalRps = listOfExercises.reduce((sum, ex) => {
-      return sum + ex.reps;
-    }, 0);
+
+  const totalSumOfReps = () => {
+    const totalRps = listOfExercises.reduce((sum, ex) => sum + ex.reps, 0);
     setCalculatedReps(totalRps);
   }
   const updateReps = (id, newReps) => {
-  setListOfExercises(listOfExercises.map(set => 
-    set.id === id ? { ...set, reps: Number(newReps) } : set
-  ));
-};
+    setListOfExercises(listOfExercises.map(set => 
+      set.id === id ? { ...set, reps: Number(newReps) } : set
+    ));
+  };
+
   return (
-    <>
+    <div className={isDarkMode ? "app-container dark-mode" : "app-container"}>
+      <header>
+        <button className="theme-toggle" onClick={() => setIsDarkMode(!isDarkMode)}>
+          {isDarkMode ? "☀️ Jasny" : "🌙 Ciemny"}
+        </button>
+      </header>
+
       <form onSubmit={addExercise}>
         <input type="text" placeholder='Dodaj swoje ćwiczenie' value={exercise} onChange={(e) => setExercise(e.target.value)}/>
         <input type="number" placeholder='ilość serii' value={sets} onChange={(e) => setSets(e.target.value)}/>
         <input type="number" placeholder='ilość powtórzeń' value={reps} onChange={(e) => setReps(e.target.value)}/>
         <button type="submit">Dodaj</button>
       </form>
+
       <div className="exerciseTable"> 
         {listOfExercises.map((ex) => (
           <div key={ex.id} className="exercisecard">
@@ -65,10 +67,13 @@ function App() {
             </ul>
           </div>
         ))}
-       <span>Suma wszystkich powtórzeń: {calculatedReps} <button onClick={totalSumOfReps}>Przelicz</button></span>
+        <div className="summary-bar">
+          <span>Suma wszystkich powtórzeń: {calculatedReps}</span>
+          <button onClick={totalSumOfReps}>Przelicz</button>
+        </div>
       </div>
-    </>
+    </div>
   )
 }
 
-export default App
+export default App;
