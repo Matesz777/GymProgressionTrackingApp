@@ -46,7 +46,7 @@ function App() {
     <div className={isDarkMode ? "app-container dark-mode" : "app-container"}>
       <header>
         <button className="theme-toggle" onClick={() => setIsDarkMode(!isDarkMode)}>
-          {isDarkMode ? "☀️ Jasny" : "🌙 Ciemny"}
+          {isDarkMode ? "☀️Jasny" : "🌙Ciemny"}
         </button>
       </header>
 
