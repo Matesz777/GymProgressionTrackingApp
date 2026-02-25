@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import Calender from './components/calender';
 
 function App() {
   const [exercise, setExercise] = useState("");
@@ -20,6 +21,7 @@ function App() {
     for (let i = 1; i <= Number(sets); i++){
       newSet.push({
         id: `${exerciseId}-${i}`,
+        date: new Date(),
         groupId: exerciseId,
         name: exercise,
         setNumber: i,
@@ -72,6 +74,7 @@ function App() {
           <button onClick={totalSumOfReps}>Przelicz</button>
         </div>
       </div>
+      <Calender ExercioseProps={listOfExercises}/>
     </div>
   )
 }

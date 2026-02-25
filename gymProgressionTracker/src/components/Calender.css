@@ -1,0 +1,26 @@
+.calender{
+    min-width: 600px;
+    min-height: 200px;
+    display: flex;
+    justify-content: center;
+}
+.calender-days{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px;
+}
+.calender-day{
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    width: 120px;
+    text-align: center;
+}
+.calender-exercise{
+    margin-top: 10px;
+}
